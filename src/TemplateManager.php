@@ -15,12 +15,8 @@ class TemplateManager
         return $replaced;
     }
 
-    private function computeText($text, array $data)
+    private function computeQuote ($text, $quote)
     {
-        $APPLICATION_CONTEXT = ApplicationContext::getInstance();
-
-        $quote = (isset($data['quote']) and $data['quote'] instanceof Quote) ? $data['quote'] : null;
-
         if ($quote)
         {
             $_quoteFromRepository = QuoteRepository::getInstance()->getById($quote->id);
@@ -59,14 +55,27 @@ class TemplateManager
         else
             $text = str_replace('[quote:destination_link]', '', $text);
 
-        /*
-         * USER
-         * [user:*]
-         */
-        $_user  = (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $APPLICATION_CONTEXT->getCurrentUser();
+        return $text;
+    }
+
+    private function computeUser($text, $_user)
+    {
         if($_user) {
             (strpos($text, '[user:first_name]') !== false) and $text = str_replace('[user:first_name]'       , ucfirst(mb_strtolower($_user->firstname)), $text);
         }
+
+        return $text;
+    }
+
+    private function computeText($text, array $data)
+    {
+        $APPLICATION_CONTEXT = ApplicationContext::getInstance();
+
+        $quote = (isset($data['quote']) and $data['quote'] instanceof Quote) ? $data['quote'] : null;
+        $text = $this->computeQuote($text, $quote);
+
+        $_user  = (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $APPLICATION_CONTEXT->getCurrentUser();
+        $text = $this->computeUser($text, $_user);
 
         return $text;
     }
