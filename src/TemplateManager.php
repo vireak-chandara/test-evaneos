@@ -15,6 +15,18 @@ class TemplateManager
         return $replaced;
     }
 
+    private function getQuote($data)
+    {
+        return (isset($data['quote']) and $data['quote'] instanceof Quote) ? $data['quote'] : null;
+    }
+
+    private function getUser($data)
+    {
+        $APPLICATION_CONTEXT = ApplicationContext::getInstance();
+
+        return (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $APPLICATION_CONTEXT->getCurrentUser();
+    }
+
     private function computeQuote ($text, $quote)
     {
         if ($quote)
@@ -69,12 +81,10 @@ class TemplateManager
 
     private function computeText($text, array $data)
     {
-        $APPLICATION_CONTEXT = ApplicationContext::getInstance();
-
-        $quote = (isset($data['quote']) and $data['quote'] instanceof Quote) ? $data['quote'] : null;
+        $quote = $this->getQuote($data);
         $text = $this->computeQuote($text, $quote);
 
-        $_user  = (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $APPLICATION_CONTEXT->getCurrentUser();
+        $_user  = $this->getUser($data);
         $text = $this->computeUser($text, $_user);
 
         return $text;
