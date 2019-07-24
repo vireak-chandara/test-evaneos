@@ -53,11 +53,8 @@ class TemplateManager
         return $text;
     }
 
-    private function replaceTextsDestination($text, $quote, $_quoteFromRepository)
+    private function replaceDestinationLink($text, $quote, $_quoteFromRepository, $usefulObject)
     {
-        $usefulObject = SiteRepository::getInstance()->getById($quote->siteId);
-        $destinationOfQuote = DestinationRepository::getInstance()->getById($quote->destinationId);
-
         if(strpos($text, '[quote:destination_link]') !== false) {
             $destination = DestinationRepository::getInstance()->getById($quote->destinationId);
             $text = str_replace('[quote:destination_link]', $usefulObject->url . '/' . $destination->countryName . '/quote/' . $_quoteFromRepository->id, $text);
@@ -65,9 +62,25 @@ class TemplateManager
             $text = str_replace('[quote:destination_link]', '', $text);
         }
 
+        return $text;
+    }
+
+    private function replaceDestinationName($text, $destinationOfQuote)
+    {
         if(strpos($text, '[quote:destination_name]') !== false) {
             $text = str_replace('[quote:destination_name]', $destinationOfQuote->countryName, $text);
         }
+
+        return $text;
+    }
+
+    private function replaceTextsDestination($text, $quote, $_quoteFromRepository)
+    {
+        $usefulObject = SiteRepository::getInstance()->getById($quote->siteId);
+        $destinationOfQuote = DestinationRepository::getInstance()->getById($quote->destinationId);
+
+        $text = $this->replaceDestinationLink($text, $quote, $_quoteFromRepository, $usefulObject);
+        $text = $this->replaceDestinationName($text, $destinationOfQuote);
 
         return $text;
     }
