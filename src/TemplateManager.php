@@ -2,12 +2,23 @@
 
 class TemplateManager
 {
-
     private $quoteContainer;
 
     public function __construct()
     {
         $this->quoteContainer = ['summary_html', 'summary'];
+    }
+
+    private function getQuote($data)
+    {
+        return (isset($data['quote']) and $data['quote'] instanceof Quote) ? $data['quote'] : null;
+    }
+
+    private function getUser($data)
+    {
+        $APPLICATION_CONTEXT = ApplicationContext::getInstance();
+
+        return (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $APPLICATION_CONTEXT->getCurrentUser();
     }
 
     public function getTemplateComputed(Template $tpl, array $data)
@@ -23,17 +34,6 @@ class TemplateManager
         return $replaced;
     }
 
-    private function getQuote($data)
-    {
-        return (isset($data['quote']) and $data['quote'] instanceof Quote) ? $data['quote'] : null;
-    }
-
-    private function getUser($data)
-    {
-        $APPLICATION_CONTEXT = ApplicationContext::getInstance();
-
-        return (isset($data['user']) and ($data['user'] instanceof User)) ? $data['user'] : $APPLICATION_CONTEXT->getCurrentUser();
-    }
 
     private function replaceTextsQuote($text, $quoteFromRepository)
     {
@@ -93,7 +93,7 @@ class TemplateManager
         return $text;
     }
 
-    private function computeQuote ($text, $quote)
+    private function computeQuote($text, $quote)
     {
         if ($quote) {
             $_quoteFromRepository = QuoteRepository::getInstance()->getById($quote->id);
