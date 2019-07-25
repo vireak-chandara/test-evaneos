@@ -64,7 +64,7 @@ class TemplateManager
 
     private function replaceDestinationLink($text, $quote, $_quoteFromRepository)
     {
-        if(strpos($text, '[quote:destination_link]') !== false) {
+        if(strpos($text, '[quote:destination_link]')) {
             $usefulObject = SiteRepository::getInstance()->getById($quote->siteId);
             $destination = DestinationRepository::getInstance()->getById($quote->destinationId);
             $text = str_replace('[quote:destination_link]', $usefulObject->url . '/' . $destination->countryName . '/quote/' . $_quoteFromRepository->id, $text);
@@ -77,7 +77,7 @@ class TemplateManager
 
     private function replaceDestinationName($text, $destinationOfQuote)
     {
-        if(strpos($text, '[quote:destination_name]') !== false) {
+        if(strpos($text, '[quote:destination_name]')) {
             $text = str_replace('[quote:destination_name]', $destinationOfQuote->countryName, $text);
         }
 
@@ -115,7 +115,7 @@ class TemplateManager
     private function computeUser($text, $_user)
     {
         if($_user) {
-            (strpos($text, '[user:first_name]') !== false) and $text = str_replace('[user:first_name]'       , ucfirst(mb_strtolower($_user->firstname)), $text);
+            (strpos($text, '[user:first_name]')) and $text = str_replace('[user:first_name]'       , ucfirst(mb_strtolower($_user->firstname)), $text);
         }
 
         return $text;
