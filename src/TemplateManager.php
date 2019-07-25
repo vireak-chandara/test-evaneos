@@ -2,12 +2,6 @@
 
 class TemplateManager
 {
-    private $quoteContainer;
-
-    public function __construct()
-    {
-        $this->quoteContainer = ['summary_html', 'summary'];
-    }
 
     private function getQuote($data)
     {
@@ -37,21 +31,25 @@ class TemplateManager
 
     private function replaceTextsQuote($text, $quoteFromRepository)
     {
-        $container = $this->quoteContainer;
-
-        foreach ($container as $content) {
-            $contained = strpos($text, '[quote:' . $content . ']');
-            if ($contained !== false) {
-                $text = str_replace(
-                    '[quote:' . $content . ']',
-                    Quote::renderHtml($quoteFromRepository),
-                    $text
-                );
-            }
-        }
-
+        $text = $this->quoteToHTML($text, $quoteFromRepository);
+        $text = $this->quoteToText($text, $quoteFromRepository);
         return $text;
     }
+
+    private function quoteToHtml($text, $quoteFromRepository){
+        return str_replace(
+            '[quote:summary_html]',
+            Quote::renderHtml($quoteFromRepository),
+            $text
+        );
+    }
+
+    private function quoteToText($text, $quoteFromRepository){
+        return str_replace(
+            '[quote:summary]',
+            Quote::renderText($quoteFromRepository),
+            $text
+        );}
 
     private function replaceDestinationLink($text, $quote, $_quoteFromRepository)
     {
