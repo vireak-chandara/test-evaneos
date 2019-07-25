@@ -31,16 +31,16 @@ class TemplateManager
 
     private function replaceTextsQuote($text, $quoteFromRepository)
     {
-        $text = $this->quoteToHTML($text, $quoteFromRepository);
-        $text = $this->quoteToText($text, $quoteFromRepository);
+        $text = $this->quoteToHTML('summary_html', $text, $quoteFromRepository);
+        $text = $this->quoteToText('summary', $text, $quoteFromRepository);
         return $text;
     }
 
-    private function quoteToHtml($text, $quoteFromRepository)
+    private function quoteToHtml($quote, $text, $quoteFromRepository)
     {
-        if(strpos($text, '[quote:summary_html]')){
+        if(strpos($text, '[quote:'. $quote .']')){
             return str_replace(
-                '[quote:summary_html]',
+                '[quote:'. $quote .']',
                 Quote::renderHtml($quoteFromRepository),
                 $text
             );
@@ -49,11 +49,11 @@ class TemplateManager
 
     }
 
-    private function quoteToText($text, $quoteFromRepository)
+    private function quoteToText($quote, $text, $quoteFromRepository)
     {
-        if (strpos($text, '[quote:summary]')) {
+        if (strpos($text, '[quote:'. $quote .']')) {
             return str_replace(
-                '[quote:summary]',
+                '[quote:'. $quote .']',
                 Quote::renderText($quoteFromRepository),
                 $text
             );
