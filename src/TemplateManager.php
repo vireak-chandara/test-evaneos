@@ -36,20 +36,31 @@ class TemplateManager
         return $text;
     }
 
-    private function quoteToHtml($text, $quoteFromRepository){
-        return str_replace(
-            '[quote:summary_html]',
-            Quote::renderHtml($quoteFromRepository),
-            $text
-        );
+    private function quoteToHtml($text, $quoteFromRepository)
+    {
+        if(strpos($text, '[quote:summary_html]')){
+            return str_replace(
+                '[quote:summary_html]',
+                Quote::renderHtml($quoteFromRepository),
+                $text
+            );
+        }
+        return $text;
+
     }
 
-    private function quoteToText($text, $quoteFromRepository){
-        return str_replace(
-            '[quote:summary]',
-            Quote::renderText($quoteFromRepository),
-            $text
-        );}
+    private function quoteToText($text, $quoteFromRepository)
+    {
+        if (strpos($text, '[quote:summary]')) {
+            return str_replace(
+                '[quote:summary]',
+                Quote::renderText($quoteFromRepository),
+                $text
+            );
+        }
+        return $text;
+    }
+
 
     private function replaceDestinationLink($text, $quote, $_quoteFromRepository)
     {
